@@ -612,14 +612,17 @@ class Panel(gdb.Command):
         if not self.enabled:
             return
 
-        global console
-
         argv = gdb.string_to_argv(arg)
         if len(argv) == 0:
             self.render_once = True
+            return
+
+        self.dont_repeat()
+
+        global console
 
         # launch an inferior process while redirect its output to logger fifo
-        elif argv[0] == 'run':
+        if argv[0] == 'run':
             if len(argv) > 1:
                 ori_argv = ' '.join(argv[1:])
             else:
