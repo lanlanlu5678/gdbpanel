@@ -65,9 +65,10 @@
         2. *S*.*left_child* is below *S*, and they are aligned on left edge
         3. *S*.*right_child* is on the right of *S*, and they are aligned on top edge
     - the binary tree is written in the "slots" list with following rules:
-        1. each slot must define both left/right children, use "None" represent the bsent of child
-        2. let *S* = slots[i], then slots[i+1] must be *S*.*right_child* (can be another lot or None)
-        3. *S*.*left_child* must be defined, just next to the last element under *S*.*right_child* (i.e. the subtree)
+        1. slots[0] = root = slot at top-left
+        2. each slot must define both left/right children, use "None" represent the bsent of child
+        3. let *S* = slots[i], then slots[i+1] must be *S*.*right_child* (can be another lot or None)
+        4. *S*.*left_child* must be defined, just next to the last element under *S*.*right_child* (i.e. the subtree)
 - **panes** config
     - assign panes to slots here, by writing "pane name: slot id"
     - panes not assigned here will be hidden

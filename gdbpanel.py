@@ -504,7 +504,10 @@ class Panel(gdb.Command):
             self.slots = {}
             slot_bounds = {}
             def build_tree(xl: int, yt: int) -> Panel.Slot:
-                slot_config = config.pop(0)
+                try:
+                    slot_config = config.pop(0)
+                except IndexError:
+                    raise Panel.PanelConfigError('Layout', 'Invalid "slots", missing element (probably None)')
                 if slot_config == None:
                     return None
                 else:
