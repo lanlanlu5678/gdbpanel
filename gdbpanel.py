@@ -987,6 +987,7 @@ class Panel(gdb.Command):
             self.frame_line_num = 0
             self.file = None
             self.cache = {}
+            self.highlighted = {}
 
             from pygments.formatters import Terminal256Formatter
             self.fmter = Terminal256Formatter(style=Panel.config['style']['source-highlight-style'])
@@ -994,7 +995,7 @@ class Panel(gdb.Command):
             from pygments.lexers import get_lexer_for_filename
             self.lexer = get_lexer_for_filename('foo.cpp')
 
-            self.low_performance = 'low_performance' in Panel.config
+            self.low_performance = 'low-performance' in Panel.config
 
             self.warning = None
 
