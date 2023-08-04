@@ -149,6 +149,9 @@ class Console:
             self.logs = ['~'] * 500
             self.cursor = 0
 
+            self.input_line = '(input) '
+            self.input_prefix_len = 8
+
         def start(self):
             self.fifo = open(self.path, opener=self.fifo_opener)
             self.sel = selectors.DefaultSelector()
@@ -159,8 +162,17 @@ class Console:
             self.sel.close()
             self.fifo.close()
 
+        def append(self, line: str) -> None:
+            self.logs[self.cursor] = line
+            if self.cursor == 499:
+                self.cursor = 0
+            else:
+                self.cursor += 1
+
         def redirect(self, console: Console) -> None:
             print('\x1b[H\x1b[2J', file=sys.__stdout__)
+            input_line = self.input_line
+
             while True:
                 if not console.inferior_running:
                     break
@@ -171,13 +183,28 @@ class Console:
                 #       refer to https://www.linuxquestions.org/questions/programming-9/c-printf-hangs-linux-pipes-4175428396/
                 for key, _ in self.sel.select(timeout=1):
                     log = key.fileobj.read()
-                    print(log, file=sys.__stdout__)
-                    for line in log.split('\n'):
-                        self.logs[self.cursor] = line.replace('\t', '    ')
-                        if self.cursor == 499:
-                            self.cursor = 0
-                        else:
-                            self.cursor += 1
+
+                    # all input handle behaviour based on txx on Alxxic's server
+                    if len(log) == 0:   # happens when input is "backspace" but no content to delete
+                        continue
+                    # all input reaction start with '\r', print whole new line from begins of current line
+                    #   because with "end=''" but no "\r" or "\n", buffer won't flush
+                    if log[0] == '\b':  # handle "backspace", delete input line character unless only prefix left, clear current line since new input is shorter
+                        if len(input_line) > self.input_prefix_len:
+                            input_line = input_line[:-1]
+                        output = '\x1b[2K\r' + input_line
+                    elif log[0] == '\n':    # handle "enter", record current input, print input + newline + input_prefix
+                        self.append(input_line)
+                        output = '\r' = input_line + '\n' + self.input_line
+                        input_line = self.input_line
+                    elif len(log) == 1:     # handle normal input
+                        input_line += log
+                        output = '\r' + input_line
+                    else:
+                        for line in log.strip('\n').split('\n'):
+                            self.append(line.replace('\t', '    '))
+                        output = log
+                    print(output, file=sys.__stdout__, end='')
 
         def redirect_once(self) -> None:
             print('Trying to get inferior\'s log ...')
