@@ -977,8 +977,8 @@ class Panel(gdb.Command):
             else:
                 lines = fstr.strip().split('\n')
                 try:
-                    typetag = v.type.target().tag if not v.type.tag else v.type.tag
-                except gdb.error:
+                    typetag = v.type.target().strip_typedefs().tag
+                except RuntimeError:
                     typetag = ''
                 if re.match('^std::(__\d+::)?(__cxx11::)?list<.*>$', typetag) != None:
                     size = Panel.Pane.ListSizeWorker_call_(v)
