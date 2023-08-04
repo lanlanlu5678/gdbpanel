@@ -735,7 +735,7 @@ class Panel(gdb.Command):
                 idx = self.format_args([int], argv)[0]
             except TypeError:
                 raise Panel.PanelSyntaxError(arg, argv[0])
-            if idx >= len(self.panes['Watch']):
+            if idx >= len(self.panes['Watch'].expressions):
                 raise Panel.PanelError(f'{idx} out of watch list range.')
             self.panes['Watch'].expressions.pop(idx)
 
