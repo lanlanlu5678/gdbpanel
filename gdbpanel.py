@@ -89,7 +89,7 @@ class Console:
     ''' ------------------------------------------ api for panel --------------------------------------------- '''
     def refresh_stack(self) -> list:
         stack = []
-        f = gdb.selected_frame()
+        f = gdb.newest_frame()
         while f:
             if f.type() == gdb.DUMMY_FRAME:
                 stack.append('<Gdb Function Call>')
