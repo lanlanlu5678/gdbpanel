@@ -1308,7 +1308,7 @@ class Panel(gdb.Command):
 
                     self.content.append(line)
             
-            return self.content
+            return self.content[:height]
 
 
     class Log(Pane):
