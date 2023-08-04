@@ -113,7 +113,10 @@ class Console:
             return gdb.lookup_global_symbol(func, gdb.SYMBOL_VAR_DOMAIN).name
 
     def get_last_cmd_val(self) -> list:
-        cmd = gdb.execute('show commands', False, True).split('\n')[-2]
+        cmd = gdb.execute('show commands', False, True).split('\n')
+        if len(cmd) < 2:
+            return 0, '', None
+        cmd = cmd[-2]
         first = re.search(r'\s+\d+\s+', cmd).span()[1]
         first_char = cmd[first]
         if first_char == 'f' or first_char == 't':
