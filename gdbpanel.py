@@ -320,11 +320,6 @@ class Panel(gdb.Command):
         # in most case (except specify by cmd or error occur), print panel when a gdb command finished
         'auto-render': True,
 
-        # if discard scrollback buffer, impossible to review previous logs
-        # if keep scrollback buffer, panel content will quickly flush out the logs, also hardly to review
-        # enable this option, redirect/save the logs from inferior in logger, can review by command "panel view Log"
-        'redirect-inferior-logs': True,
-
         # wild mode: prevent showing gdb's raw output, keep only panel content refreshing in terminal
         # for focusing infomations, capture them in panes
         # for special case (long message pane cannot contain), use command "panel print $gdb_command"
@@ -445,8 +440,6 @@ class Panel(gdb.Command):
         gdb.events.before_prompt.connect(self.render_handler)
         global console
         console.start()
-        if Panel.config['redirect-inferior-logs']:
-            console.init_logger()
 
     def end(self) -> None:
         self.enabled = False
@@ -660,6 +653,8 @@ class Panel(gdb.Command):
                 ori_argv = ' '.join(argv[1:])
             else:
                 ori_argv = ''
+            if not hasattr(console, 'logger'):
+                console.init_logger()
             console.start_logger()
             gdb.execute(f'run {ori_argv} > {console.logger.path}')
 
