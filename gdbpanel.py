@@ -259,35 +259,7 @@ class Panel(gdb.Command):
     ''' ------------------------------------------ config --------------------------------------------- '''
     config = {
         'layout': {
-            #   each slot is defined by a list of int [id, width, height]
-            #   [0, 6, 8] means the slot with 6/10 of terminal's width, 8/10 of terminal's height
-            #   width/height of any slot cannot exceed 10
-            #   id can be any int but must be unique
-            #
-            #   Let S is a slot
-            #   positions of the slots are represented by a binary tree:
-            #       1. root locates at top-left of the terminal
-            #       2. S.left_child is below S, and they are aligned on left edge
-            #       3. S.right_child is on the right of S, and they are aligned on top edge
-            #
-            #   the binary tree is written in the "slots" list with following rules:
-            #       1. each slot must define both left/right children, use "None" represent the absent of child
-            #       2. let S = slots[i], then slots[i+1] must be S.right_child (can be another slot or None)
-            #       3. S.left_child must be defined, just next to the last element under S.right_child (i.e. the subtree)
-            #
-            #   the layout of following config (number is slots' id):
-            #      -----------------
-            #      | 0        |  1 |
-            #      |          |    |
-            #      |          |    |
-            #      |          |----|
-            #      |----------|  2 |
-            #      | 3        |    |
-            #      -----------------
             'slots': [[0, 6, 8], [1, 4, 6], None, [2, 4, 4], None, None, [3, 6, 2], None, None],
-
-            #   assign panes to slots here, by writing "pane name: slot id"
-            #   panes not assigned here will be hidden
             'panes': {'Source': 0, 'ValueHistory': 1, 'Stack': 2, 'Breakpoints': 3}
         },
 
