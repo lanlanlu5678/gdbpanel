@@ -198,7 +198,7 @@ class Console:
                         output = '\x1b[2K\r' + input_line
                     elif log[0] == '\n':    # handle "enter", record current input, print input + newline + input_prefix
                         self.append(input_line)
-                        output = '\r' = input_line + '\n' + self.input_line
+                        output = '\r' + input_line + '\n' + self.input_line
                         input_line = self.input_line
                     elif len(log) == 1:     # handle normal input
                         input_line += log
