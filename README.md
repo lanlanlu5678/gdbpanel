@@ -127,9 +127,9 @@
     - assign the *PANE* to *SLOT*
     - if *PANE* already been assigned to a slot, swap panes in the two slot.
     - if *PANE* is hidden, pane in *SLOT* turned into hidden
-3. panel silent *COMMAND*
-    - *COMMAND*, str
-    - call gdb to execute *COMMAND*, when finish, panel won't show to avoid flushing the result away
+3. panel silent [*COMMAND*]
+    - *COMMAND*, str, gdb command, optional
+    - stop showing panel once, if *COMMAND* specified, call gdb to execute it (temprory set "discard-gdb-logs" to `False`)
 4. panel layout *CONFIG_KEY*
     - *CONFIG_KEY*, type depends on actual setting
     - set `panel.layout_configs[CONFIG_KEY]` as current layout config

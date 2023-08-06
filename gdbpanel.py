@@ -654,12 +654,12 @@ class Panel(gdb.Command):
             if slot_a:
                 slot_a.pane = pane_b
 
-        # call gdb to execute COMMAND, panel won't show after this command to avoid flushing the result away
+        # stop render panel once, if COMMAND specified, call gdb to execute it
         # temporary override the config "discard-gdb-logs" to false
         elif argv[0] == 'silent':
-            if len(argv) == 1:
-                raise Panel.PanelSyntaxError(arg, argv[0])
             self.skip_render_once = True
+            if len(argv) == 1:
+                return
             self.set_discard_gdb(False)
             gdb.execute(' '.join(argv[1:]))
             self.set_discard_gdb(self.discard_gdb)

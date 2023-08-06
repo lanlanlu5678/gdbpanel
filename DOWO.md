@@ -125,9 +125,9 @@
     - 将 *PANE* 分配到 *SLOT* 显示
     - 如果 *PANE* 已经在一个 slot 中，交换两个 slot 的 pane.
     - 如果 *PANE* 是隐藏的，那么目标 slot 原来的 pane 将被隐藏.
-3. panel silent *COMMAND*
-    - *COMMAND*, str
-    - 调用 gdb 执行命令 *COMMAND*，暂停显示 panel 一次
+3. panel silent [*COMMAND*]
+    - *COMMAND*, str, gdb 命令，可选
+    - 暂停显示 panel 一次，如果带有 *COMMAND* 参数，执行该命令
 4. panel layout *CONFIG_KEY*
     - *CONFIG_KEY*，类型由实际配置决定
     - 使用 `panel.layout_configs[CONFIG_KEY]` 作为当前 layout 配置
