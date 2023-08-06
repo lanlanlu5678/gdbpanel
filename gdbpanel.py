@@ -653,16 +653,6 @@ class Panel(gdb.Command):
             slot_b.pane = pane_a
             if slot_a:
                 slot_a.pane = pane_b
-            
-        # call gdb command "print EXPRESSION", panel won't show after this print to avoid flushing the result away
-        # temporary override the config "discard-gdb-logs" to false
-        elif argv[0] == 'print':
-            if len(argv) == 1:
-                raise Panel.PanelSyntaxError(arg, argv[0])
-            self.skip_render_once = True
-            self.set_discard_gdb(False)
-            gdb.execute(' '.join(argv))
-            self.set_discard_gdb(self.discard_gdb)
 
         # call gdb to execute COMMAND, panel won't show after this command to avoid flushing the result away
         # temporary override the config "discard-gdb-logs" to false
@@ -768,9 +758,8 @@ class Panel(gdb.Command):
                 return True
 
             # flag set by command "panel"
-            #   1. "panel print", show content that panes cannot contian
-            #   2. "panel silent"
-            #   3. "panel flush", try flush inferior's output stream buffer and print new log
+            #   1. "panel silent"
+            #   2. "panel flush", try flush inferior's output stream buffer and print new log
             if self.skip_render_once:
                 self.skip_render_once = False
                 return True
