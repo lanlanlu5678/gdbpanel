@@ -735,9 +735,8 @@ class Panel(gdb.Command):
         global console
         # if prev cmd is "f"/"t", console.sal_outdated shound be refreshed before Source & Stack render
         idx, cmd, val = console.get_last_cmd_val()
-        if self.panes['ValueHistory'] != None:
-            # "ValueHistory" pane should update content even hidden
-            self.panes['ValueHistory'].record_cmd_value(idx, cmd, val)
+        # "ValueHistory" pane should update content even hidden
+        self.panes['ValueHistory'].record_cmd_value(idx, cmd, val)
             
 
         def skip_render() -> bool:
