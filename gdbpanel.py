@@ -593,6 +593,10 @@ class Panel(gdb.Command):
 
     def render(self) -> None:
         self.refresh_layout()
+        if not self.layout_valid:
+            # here already pass check in react_handler, no need raise Error
+            print('Invalid Layout.')
+            return
 
         content = self.layout.root.render()
         content.append(self.style.deli_h(self.width))
@@ -610,7 +614,8 @@ class Panel(gdb.Command):
 
         argv = gdb.string_to_argv(arg)
         if len(argv) == 0:
-            self.render_once = True
+            self.skip_render_once = True    # avoid another render after this command
+            self.render()
             return
 
         self.dont_repeat()
@@ -740,14 +745,6 @@ class Panel(gdb.Command):
             
 
         def skip_render() -> bool:
-            if not self.layout_valid:
-                return True
-
-            # flag set by command "panel"
-            if self.render_once:
-                self.render_once = False
-                return False
-
             if not self.auto_render:
                 return True
 
@@ -757,8 +754,9 @@ class Panel(gdb.Command):
                 return True
 
             # flag set by command "panel"
-            #   1. "panel silent"
-            #   2. "panel flush", try flush inferior's output stream buffer and print new log
+            #   1. "panel"
+            #   2. "panel silent"
+            #   3. "panel flush", try flush inferior's output stream buffer and print new log
             if self.skip_render_once:
                 self.skip_render_once = False
                 return True
