@@ -289,15 +289,14 @@ class Panel(gdb.Command):
             'disabled-breakpoint': 9
         },
 
-        # in most case (except specify by cmd or error occur), print panel when a gdb command finished
         'auto-render': True,
 
         # wild mode: prevent showing gdb's raw output, keep only panel content refreshing in terminal
-        # for focusing infomations, capture them in panes
+        # for desired infomations, capture them in panes
         # for special case (long message pane cannot contain), use command "panel print $gdb_command"
         'discard-gdb-logs': True,
 
-        # crazy mode: keep terminal fix on panel (cannot scroll back for previous content which are usually redundant)
+        # crazy mode: keep terminal fix on panel (cannot scroll back for previous content, which are usually redundant)
         'discard-scrollback-buffer': False
     }
 

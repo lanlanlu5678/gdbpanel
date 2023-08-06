@@ -2,10 +2,9 @@
 - [中文读我](./DOWO.md)
 
 ## Motivation
-1. improve experience of gdb debugging in terminal, and light weight
-2. exploit full screen by custom layout
-3. record informations & restore in need
-4. iterate STL containers during debugging
+1. exploit full screen by custom layout
+2. record informations & restore in need
+3. iterate STL containers during debugging
 
 ## Prerequisite
 1. gdb with python >= 3.10
@@ -49,7 +48,6 @@
         - **NOTICE**: inferior's output is redirected to a fifo, therefore "\n" may not flush the output stream; in c/c++ if a `printf()` is not flushed in time, try `panel flush`
         - **NOTICE**: logging stops as inferior stops, the output of a function called from gdb should be obtained by command `panel flush`
         - **NOTICE**: an opened fifo under */tmp* will be leaked if gdb crashes
-        - **NOTICE**: the input line of inferior is simluated by GdbPanel, may have bugs
     2. *ValueHistory*
         - records the string pairs of expression & result of each manually `print` command
         - if a result of `print` has multiple lines, record at most 4 lines
@@ -78,7 +76,7 @@
 ## Documents
 ### Config
 - GdbPanel's config is defined directly in python code, which can be customized by editing source code, or assigning new value to attribute `Panel.config` by other python statements
-- **Layout**
+- **layout**
     - **slots** config
         1. each slot is defined as a list of int `[id, width, height]`
             - id can be any int but must unique, used to define mappings to **panes**
@@ -114,6 +112,10 @@
             'panes': {'Source': 0, 'Watch': 1, 'Stack': 2, 'Breakpoints': 3}
         }
         ```
+- **style**
+    - apperence settings like color, refer to comments in source code
+- **auto-render**
+    - bool option, if set `True`, panel will show once gdb command finished, except `panel silent` or error occurs
 ### Commands
 0. following are GDB commands
 1. panel view *PANE* *SLOT* --- assign the *PANE* to *SLOT*.

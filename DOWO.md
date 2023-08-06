@@ -1,8 +1,7 @@
 ## Motivation
-1. 增强终端 gdb debug 使用体验，轻量
-2. 充分利用 terminal 显示区域
-3. 记录 debug 过程中的重要信息，在需要的时候再现
-4. 在 debug 过程中遍历 stl 容器
+1. 充分利用 terminal 显示区域
+2. 记录 debug 过程中的重要信息，在需要的时候再现
+3. 在 debug 过程中遍历 stl 容器
 
 ## Prerequistie
 1. gdb with python >= 3.10
@@ -46,7 +45,6 @@
         - **注意**：由于输出被重定向到 fifo 中，换行符 "\n" 可能不会清空 output stream buffer，确认所需要的 inferior log 都及时地被写出；如果在 C/C++ 程序中使用 `printf()` 而没有添加 `fflush(stdout)` 操作，可以尝试命令 `panel flush`
         - **注意**：inferior 暂停时会自动停止记录，如果 inferior 是 C/C++ 程序且在 gdb 中调用了有打印输出的函数，需要执行命令 `panel flush` 手动获取
         - **注意**：如果 gdb crash，将泄漏一个未关闭的 fifo 文件在 */tmp* 目录下
-        - **注意**：inferior 如果提供命令行输入，输入的交互显示是 GdbPanel 模拟的，可能存在 bug
     2. *ValueHistory*
         - 记录着通过终端中手动执行的 `print` 命令打印的信息
         - 每手动执行一次 `print $expression`，记录 **$expression** 和 gdb 打印的结果字符串
@@ -75,7 +73,7 @@
 ## Documents
 ### Config
 - GdbPanel 的配置直接写在 python 源代码中，进行定制可以直接修改源文件，也可以另写语句为 `Panel.config` 这个属性赋新值
-- **Layout**：
+- **layout**：
     - **slots**
         1. 此项配置实际上是描述如何用矩形铺满 terminal 显示区域，需要明确定义 slot 的序号、宽高、位置
         2. `[id, width, height]` 这样一个 `list` 定义了一个 slot：
@@ -87,7 +85,7 @@
             - *S*.*right_child* 表示顶边与 *S* 对齐，左侧边与 *S* 右侧边重合的另一个 slot
         4. 上述二叉树在 config 中用一个 `list` 来表示，假设 *S* 是一个 slot：
             - slot[0] 是 root
-            - 假设 *S* 是第 i 个元素，那么第 i+1 个元素必须是 *S* 的 *right_child*，如果 *S* 不存在 *right_child*，那么填 `None`
+            - 假设 *S* 是第 i 个元素，那么第 i+1 个元素必须是 *S* 的 *right_child*，如果 *S*.*right_child* 不存在，那么填 `None`
             - 假设按照上述规则完成对 *S*.*right_child* 的定义后，最后一个元素下标为 j，那么第 j+1 个元素必须是 *S* 的 *left_child*，若不存在填 `None`
         5. **注意**：一个合法的 slots config，最后所有矩形拼起来必须是一个 10x10 的正方形
     - **panes**
@@ -113,22 +111,25 @@
             'panes': {'Source': 0, 'Watch': 1, 'Stack': 2, 'Breakpoints': 3}
         }
         ```
-- 其他 config 选项参考源文件注释
+- **style**
+    - 外观配置项，参考源代码注释
+- **auto-render**
+    - 若设为 `True`，除了 `panel silent` 命令或出现 error，gdb 命令执行完毕后将自动显示 panel
 ### Commands
 0. 以下命令在 gdb 输入
 1. panel
     - 显示 GdbPanel
-1. panel view *PANE* *SLOT* --- assign the *PANE* to *SLOT*.
-    - *PANE*, str, name of a pane.
-    - *SLOT*, int, index of a slot, defined in layout config
+1. panel view *PANE* *SLOT* --- 将 *PANE* 分配到 *SLOT* 显示.
+    - *PANE*, str, pane 名字.
+    - *SLOT*, int, config 中定义的 slot id.
     - 如果 *PANE* 已经在一个 slot 中，交换两个 slot 的 pane.
     - 如果 *PANE* 是隐藏的，那么目标 slot 原来的 pane 将被隐藏.
-3. panel silent *COMMAND* --- call gdb to execute *COMMAND*
+3. panel silent *COMMAND* --- 调用 gdb 执行命令 *COMMAND*，暂停显示 panel 一次
     - *COMMAND*, str
     - 执行完 *COMMAND* 之后 panel 不会显示，避免刷掉结果
 4. panel layout *CONFIG_KEY* --- change panel's layout with the selected config
-    - *CONFIG_KEY*, 类型根据实际配置，用于在 **panel.layout_configs** 中选择 config
-    - 必须先为 **panel** 添加一项属性 **layout_configs** 才能使用快速切换 layout 的功能，值可以是 `list`, `dict` 或者任意支持索引操作的数据类型，元素是一个 layout config
+    - *CONFIG_KEY*, 用于在 **panel.layout_configs** 中选择 config，类型由实际配置决定
+    - 要使用快速切换 layout 的功能，必须先为 **panel** 添加一项属性 **layout_configs**，值可以是 `list`, `dict` 或者任意支持索引操作的数据类型，元素是一个 layout config
 5. panel run *ARGS* --- launch an inferior process with *ARGS*, with GdbPanel's internal logger enabled
 6. panel watch *EXPRESSION* --- add *EXPRESSION* to panel's watch list
 7. panel unwatch *EXPRESSION* --- delete *EXPRESSION* from panel's watch list
