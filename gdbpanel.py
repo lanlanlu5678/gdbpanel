@@ -230,12 +230,11 @@ class Console:
         self.logging = True
         self.logger.start()
 
-    # if logging not enable, prevent create fifo for this gdb session
+    # only create fifo when "panel run" is called
     def init_logger(self):
         self.logger = Console.Logger()
 
         # stop logging when current process stops
-        # to enable logging, start each time running a new process of inferior, by "panel run"
         def inf_exit_logger_handler(e: gdb.ExitedEvent):
             if self.logging:
                 # wait for logger redirect thread exit before close fifo
@@ -626,6 +625,10 @@ class Panel(gdb.Command):
                 ori_argv = ''
             if not hasattr(console, 'logger'):
                 console.init_logger()
+            if gdb.selected_inferior().pid > 0:
+                # already has a process running, current cmd is rerun
+                # need kill current process to trigger logger.end(), before start logger
+                gdb.execute('kill', False, False)
             console.start_logger()
             gdb.execute(f'run {ori_argv} > {console.logger.path}')
 
