@@ -79,6 +79,7 @@
         2. `[id, width, height]` 这样一个 `list` 定义了一个 slot：
             - id 可以是任意整数，但不能重复，用于指定与 **pane** 的映射关系
             - width/height 是两个 [1, 10] 之间的整数，单位分别是 terminal 显示区域宽/高的 1/10
+            - **注意**：一个合法的 slots config，所有矩形拼起来必须是一个 10x10 的正方形
         3. slot 之间的位置关系通过一棵二叉树来表示，假设 *S* 是一个 slot，树的构建规则如下：
             - 每个 slot 都是树中的一个节点，左上角的 slot 是 root
             - *S*.*left_child* 表示左侧边与 *S* 对齐，顶边与 *S* 底边重合的另一个 slot
@@ -87,7 +88,6 @@
             - slot[0] 是 root
             - 假设 *S* 是第 i 个元素，那么第 i+1 个元素必须是 *S* 的 *right_child*，如果 *S*.*right_child* 不存在，那么填 `None`
             - 假设按照上述规则完成对 *S*.*right_child* 的定义后，最后一个元素下标为 j，那么第 j+1 个元素必须是 *S* 的 *left_child*，若不存在填 `None`
-        5. **注意**：一个合法的 slots config，最后所有矩形拼起来必须是一个 10x10 的正方形
     - **panes**
         1. 一个 `dict`，键值对为 "pane name: slot id"
         2. 没有指定 slot 的 pane 将不会显示

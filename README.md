@@ -78,9 +78,10 @@
 - GdbPanel's config is defined directly in python code, which can be customized by editing source code, or assigning new value to attribute `Panel.config` by other python statements
 - **layout**
     - **slots** config
-        1. each slot is defined as a list of int `[id, width, height]`
-            - id can be any int but must unique, used to define mappings to **panes**
-            - width/height must in range [1, 10], the unit is 1/10 of display area's width/height
+        - each slot is defined as a list of int `[id, width, height]`
+            1. id can be any int but must unique, used to define mappings to **panes**
+            2. width/height must in range [1, 10], the unit is 1/10 of display area's width/height
+            3. **NOTICE**: in a legal config, the slots must form a 10x10 square
         - positions of the slots are represented by a binary tree, let *S* is a slot:
             1. each slot is a node, top-left slot is the root
             2. *S*.*left_child* is below *S*, and they are aligned along left edge
