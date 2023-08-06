@@ -119,18 +119,24 @@
 0. 以下命令在 gdb 输入
 1. panel
     - 显示 GdbPanel
-1. panel view *PANE* *SLOT* --- 将 *PANE* 分配到 *SLOT* 显示.
+1. panel view *PANE* *SLOT*
     - *PANE*, str, pane 名字.
     - *SLOT*, int, config 中定义的 slot id.
+    - 将 *PANE* 分配到 *SLOT* 显示
     - 如果 *PANE* 已经在一个 slot 中，交换两个 slot 的 pane.
     - 如果 *PANE* 是隐藏的，那么目标 slot 原来的 pane 将被隐藏.
-3. panel silent *COMMAND* --- 调用 gdb 执行命令 *COMMAND*，暂停显示 panel 一次
+3. panel silent *COMMAND*
     - *COMMAND*, str
-    - 执行完 *COMMAND* 之后 panel 不会显示，避免刷掉结果
-4. panel layout *CONFIG_KEY* --- change panel's layout with the selected config
-    - *CONFIG_KEY*, 用于在 **panel.layout_configs** 中选择 config，类型由实际配置决定
-    - 要使用快速切换 layout 的功能，必须先为 **panel** 添加一项属性 **layout_configs**，值可以是 `list`, `dict` 或者任意支持索引操作的数据类型，元素是一个 layout config
-5. panel run *ARGS* --- launch an inferior process with *ARGS*, with GdbPanel's internal logger enabled
-6. panel watch *EXPRESSION* --- add *EXPRESSION* to panel's watch list
-7. panel unwatch *EXPRESSION* --- delete *EXPRESSION* from panel's watch list
-8. panel flush --- try flush inferior (c/c++) process's output stream buffer & read new logs
+    - 调用 gdb 执行命令 *COMMAND*，暂停显示 panel 一次
+4. panel layout *CONFIG_KEY*
+    - *CONFIG_KEY*，类型由实际配置决定
+    - 使用 `panel.layout_configs[CONFIG_KEY]` 作为当前 layout 配置
+    - 要使用快速切换 layout 的功能，必须先为 **panel** 添加一项属性 **layout_configs**，可以是 `list`, `dict` 或者任意支持索引操作的数据类型
+5. panel run *ARGS*
+	- launch an inferior process with *ARGS*, with GdbPanel's internal logger enabled
+6. panel watch *EXPRESSION*
+	- add *EXPRESSION* to panel's watch list
+7. panel unwatch *EXPRESSION*
+	- delete *EXPRESSION* from panel's watch list
+8. panel flush
+	- try flush inferior (c/c++) process's output stream buffer & read new logs

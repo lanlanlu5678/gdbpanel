@@ -118,18 +118,26 @@
     - bool option, if set `True`, panel will show once gdb command finished, except `panel silent` or error occurs
 ### Commands
 0. following are GDB commands
-1. panel view *PANE* *SLOT* --- assign the *PANE* to *SLOT*.
+1. panel
+    - show panel once
+2. panel view *PANE* *SLOT*
     - *PANE*, str, name of a pane.
     - *SLOT*, int, index of a slot, defined in layout config
+    - assign the *PANE* to *SLOT*
     - if *PANE* already been assigned to a slot, swap panes in the two slot.
-    - if *PANE* is hidden, pane in *SLOT* turned to hidden
-3. panel silent *COMMAND* --- call gdb to execute *COMMAND*
+    - if *PANE* is hidden, pane in *SLOT* turned into hidden
+3. panel silent *COMMAND*
     - *COMMAND*, str
-    - Panel won't show after this command to avoid flushing the result away
-4. panel layout *CONFIG_KEY* --- change panel's layout with the selected config
-    - *CONFIG_KEY*, type according to your setting, use to select the layout config in attribute **panel.layout_configs**
-    - To enable quick layout changing, attribute **panel.layout_configs** must be defined as something support subscription (GdbPanel will use the config *panel.layout_configs[CONFIG_KEY]*)
-5. panel run *ARGS* --- launch an inferior process with *ARGS*, with GdbPanel's internal logger enabled
-6. panel watch *EXPRESSION* --- add *EXPRESSION* to panel's watch list
-7. panel unwatch *EXPRESSION* --- delete *EXPRESSION* from panel's watch list
-8. panel flush --- try flush inferior (c/c++) process's output stream buffer & read new logs
+    - call gdb to execute *COMMAND*, when finish, panel won't show to avoid flushing the result away
+4. panel layout *CONFIG_KEY*
+    - *CONFIG_KEY*, type depends on actual setting
+    - set `panel.layout_configs[CONFIG_KEY]` as current layout config
+    - to enable layout config reloading, attribute **panel.layout_configs** must be defined, it should support subscription
+5. panel run *ARGS*
+    - launch an inferior process with *ARGS*, with GdbPanel's internal logger enabled
+6. panel watch *EXPRESSION*
+    - add *EXPRESSION* to panel's watch list
+7. panel unwatch *EXPRESSION*
+    - delete *EXPRESSION* from panel's watch list
+8. panel flush
+    - try flush inferior (c/c++) process's output stream buffer & read new logs

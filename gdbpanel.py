@@ -781,25 +781,17 @@ class Panel(gdb.Command):
             'if PANE already been assigned to a slot, swap panes in the two slot.',
             'if PANE is hidden, pane in SLOT turned to hidden.'
         ],
-        'print': [
-            'panel print EXPRESSION',
-            'EXPRESSION, str\n',
-            'Call gdb command "print EXPRESSION".',
-            'Panel won\'t show after this print to avoid flushing the result away.',
-            'Temporary override the config "discard-gdb-logs" to false.'
-        ],
         'silent': [
             'panel silent COMMAND',
             'COMMAND, str\n',
-            'Call gdb to execute COMMAND.',
-            'Panel won\'t show after this command to avoid flushing the result away.',
+            'Call gdb to execute COMMAND, when finish, panel won\'t show to avoid flushing the result away',
             'Temporary override the config "discard-gdb-logs" to false.'
         ],
         'layout': [
-            'panel layout CONFIG_INDEX',
-            'CONFIG_INDEX, int, starts from 0, the index of the selected config in "panel.layout_configs"\n',
-            'Change panel\'s layout with the selected config.',
-            'Layout configs for quick changing must be defined as a list in attribute "panel.layout_configs".'
+            'panel layout CONFIG_KEY',
+            'CONFIG_KEY, type depends on actual setting\n',
+            'Set "panel.layout_configs[CONFIG_KEY]" as current layout config',
+            'To enable layout config reloading, attribute "panel.layout_configs" must be defined, it should support subscription'
         ]
     }
     class PanelError(Exception):
