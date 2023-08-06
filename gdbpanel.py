@@ -944,6 +944,9 @@ class Panel(gdb.Command):
 
         def render(self, width: int, height: int, padding: bool) -> list[str]:
             raw = self.refresh_content(height)
+            # height passed to subclass only for hint, ensure dimension here
+            if len(raw) > height:
+                raw = raw[:height]
 
             content = []
             for line in raw:
@@ -1291,4 +1294,3 @@ class Panel(gdb.Command):
 
 
 panel = Panel()
-# panel.start()
