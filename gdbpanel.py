@@ -703,11 +703,8 @@ class Panel(gdb.Command):
             console.logger.redirect_once()
             self.set_discard_gdb(self.discard_gdb)
 
-        elif argv[0] == 'scroll':
-            pass
-
         else:
-            self.syntax_err(0, 'panel')
+            raise Panel.PanelSyntaxError(arg, argv[0])
 
     @staticmethod
     def format_args(types: list[type], args: list[str]) -> list:
@@ -802,7 +799,10 @@ class Panel(gdb.Command):
             self.msg = f'Invalid {domain} config: {cause}'
     class PanelSyntaxError(PanelError):
         def __init__(self, cmd: str, doc_code: str):
-            self.msg = 'Invalid syntax of "{}"\n\n{}\n'.format(cmd, '\n\t'.join(Panel.syntax_doc[doc_code]))
+            if doc_code not in Panel.syntax_doc:
+                self.msg = 'Invalid syntax of "{}"\n\nUnknown sub-command {}\n'.format(cmd, doc_code)
+            else:
+                self.msg = 'Invalid syntax of "{}"\n\n{}\n'.format(cmd, '\n\t'.join(Panel.syntax_doc[doc_code]))
 
     def excepthook(self, except_type, value, traceback) -> None:
         if not issubclass(except_type, KeyboardInterrupt):
